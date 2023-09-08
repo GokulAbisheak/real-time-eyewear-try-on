@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
@@ -10,9 +10,38 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
-
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import axios from 'axios';
+import { deleteDelivery } from '../../../../../server/controllers/DeliveryController.mjs';
 
 const ViewDeliveryDriver = () => {
+
+    const [deliveryDrivers, setAllDeliveryDrivers] = useState([]);
+
+    useEffect(() => {
+        function getAllDeliveryDrivers() {
+            axios.get("http://localhost:8080/delivery-driver/get-all-delivery-drivers")
+                .then((res) => {
+                    setAllDeliveryDrivers(res.data);
+                })
+                .catch((err) => {
+                    console.error("Error : " + err.message);
+                })
+        }
+        getAllDeliveryDrivers()
+    }, [])
+
+    const deleteDeliveryDriver = (objId) => {
+        axios.delete(`http://localhost:8080/delivery-driver/delete-delivery-driver/${objId}`)
+            .then((res) => {
+                if (res.data.status == "success")
+                    window.location.replace("/delivery-driver/view-delivery-driver");
+            })
+            .catch((err) => {
+                console.error("Error : " + err.message);
+            })
+    }
+
     const StyledTableCell = styled(TableCell)(({ theme }) => ({
         [`&.${tableCellClasses.head}`]: {
             backgroundColor: '#1d93bc',
@@ -61,93 +90,48 @@ const ViewDeliveryDriver = () => {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <StyledTableCell>Delivery ID</StyledTableCell>
-                            <StyledTableCell align="right">Order ID</StyledTableCell>
-                            <StyledTableCell align="right">Driver</StyledTableCell>
-                            <StyledTableCell align="right">Address</StyledTableCell>
-                            <StyledTableCell align="right">Status</StyledTableCell>
+                            <StyledTableCell>Driver ID</StyledTableCell>
+                            <StyledTableCell align="right">First Name</StyledTableCell>
+                            <StyledTableCell align="right">Last Name</StyledTableCell>
+                            <StyledTableCell align="right">Email</StyledTableCell>
+                            <StyledTableCell align="right">License No</StyledTableCell>
+                            <StyledTableCell align="right"></StyledTableCell>
                             <StyledTableCell align="right"></StyledTableCell>
                             <StyledTableCell align="right"></StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        <StyledTableRow>
-                            <StyledTableCell component="th" scope="row"> row.name</StyledTableCell>
-                            <StyledTableCell align="right">calories</StyledTableCell>
-                            <StyledTableCell align="right">fat</StyledTableCell>
-                            <StyledTableCell align="right">carbs</StyledTableCell>
-                            <StyledTableCell align="right">protein</StyledTableCell>
-                            <StyledTableCell align="right">
-                                <Link to="/delivery/add-delivery">
-                                    <button className="bg-transparent text-cyan-600 border-cyan-600 hover:bg-cyan-600 hover:text-white font-semibold  py-2 px-4 border border-blue-500 hover:border-transparent rounded">
-                                        <ModeEditIcon />
-                                    </button>
-                                </Link>
-                            </StyledTableCell>
-                            <StyledTableCell align="right">
-                                <button className="bg-transparent text-red-600 border-red-600 hover:bg-cyan-600 hover:text-white font-semibold  py-2 px-4 border border-blue-500 hover:border-transparent rounded">
-                                    <DeleteIcon />
-                                </button>
-                            </StyledTableCell>
-                        </StyledTableRow>
-                        <StyledTableRow>
-                            <StyledTableCell component="th" scope="row"> row.name</StyledTableCell>
-                            <StyledTableCell align="right">calories</StyledTableCell>
-                            <StyledTableCell align="right">fat</StyledTableCell>
-                            <StyledTableCell align="right">carbs</StyledTableCell>
-                            <StyledTableCell align="right">protein</StyledTableCell>
-                            <StyledTableCell align="right">
-                                <Link to="/delivery/add-delivery">
-                                    <button className="bg-transparent text-cyan-600 border-cyan-600 hover:bg-cyan-600 hover:text-white font-semibold  py-2 px-4 border border-blue-500 hover:border-transparent rounded">
-                                        <ModeEditIcon />
-                                    </button>
-                                </Link>
-                            </StyledTableCell>
-                            <StyledTableCell align="right">
-                                <button className="bg-transparent text-red-600 border-red-600 hover:bg-cyan-600 hover:text-white font-semibold  py-2 px-4 border border-blue-500 hover:border-transparent rounded">
-                                    <DeleteIcon />
-                                </button>
-                            </StyledTableCell>
-                        </StyledTableRow>
-                        <StyledTableRow>
-                            <StyledTableCell component="th" scope="row"> row.name</StyledTableCell>
-                            <StyledTableCell align="right">calories</StyledTableCell>
-                            <StyledTableCell align="right">fat</StyledTableCell>
-                            <StyledTableCell align="right">carbs</StyledTableCell>
-                            <StyledTableCell align="right">protein</StyledTableCell>
-                            <StyledTableCell align="right">
-                                <Link to="/delivery/add-delivery">
-                                    <button className="bg-transparent text-cyan-600 border-cyan-600 hover:bg-cyan-600 hover:text-white font-semibold  py-2 px-4 border border-blue-500 hover:border-transparent rounded">
-                                        <ModeEditIcon />
-                                    </button>
-                                </Link>
-                            </StyledTableCell>
-                            <StyledTableCell align="right">
-                                <button className="bg-transparent text-red-600 border-red-600 hover:bg-cyan-600 hover:text-white font-semibold  py-2 px-4 border border-blue-500 hover:border-transparent rounded">
-                                    <DeleteIcon />
-                                </button>
-                            </StyledTableCell>
-                        </StyledTableRow>
-                        <StyledTableRow>
-                            <StyledTableCell component="th" scope="row"> row.name</StyledTableCell>
-                            <StyledTableCell align="right">calories</StyledTableCell>
-                            <StyledTableCell align="right">fat</StyledTableCell>
-                            <StyledTableCell align="right">carbs</StyledTableCell>
-                            <StyledTableCell align="right">protein</StyledTableCell>
-                            <StyledTableCell align="right">
-                                <Link to="/delivery/add-delivery">
-                                    <button className="bg-transparent text-cyan-600 border-cyan-600 hover:bg-cyan-600 hover:text-white font-semibold  py-2 px-4 border border-blue-500 hover:border-transparent rounded">
-                                        <ModeEditIcon />
-                                    </button>
-                                </Link>
-                            </StyledTableCell>
-                            <StyledTableCell align="right">
-                                <button className="bg-transparent text-red-600 border-red-600 hover:bg-cyan-600 hover:text-white font-semibold  py-2 px-4 border border-blue-500 hover:border-transparent rounded">
-                                    <DeleteIcon />
-                                </button>
-                            </StyledTableCell>
-                        </StyledTableRow>
-                        
+                        {
+                            deliveryDrivers.map((deliveryDriver) => (
+                                <StyledTableRow>
+                                    <StyledTableCell component="th" scope="row"> {deliveryDriver._id} </StyledTableCell>
+                                    <StyledTableCell align="right">{deliveryDriver.firstName}</StyledTableCell>
+                                    <StyledTableCell align="right">{deliveryDriver.lastName}</StyledTableCell>
+                                    <StyledTableCell align="right">{deliveryDriver.email}</StyledTableCell>
+                                    <StyledTableCell align="right">{deliveryDriver.licenseNo}</StyledTableCell>
+                                    <StyledTableCell align="right">
+                                        <Link to={{ pathname: `/delivery-driver/view-delivery-driver-details/${deliveryDriver._id}` }} >
+                                            <button className="bg-transparent text-cyan-600 border-cyan-600 hover:bg-cyan-600 hover:text-white font-semibold  py-2 px-4 border border-blue-500 hover:border-transparent rounded">
+                                                <VisibilityIcon />
+                                            </button>
+                                        </Link>
+                                    </StyledTableCell>
+                                    <StyledTableCell align="right">
+                                        <Link to={{pathname: `/delivery-driver/update-delivery-driver/${deliveryDriver._id}`}}>
+                                            <button className="bg-transparent text-cyan-600 border-cyan-600 hover:bg-cyan-600 hover:text-white font-semibold  py-2 px-4 border border-blue-500 hover:border-transparent rounded">
+                                                <ModeEditIcon />
+                                            </button>
+                                        </Link>
+                                    </StyledTableCell>
+                                    <StyledTableCell align="right">
+                                        <button onClick={() => deleteDeliveryDriver(deliveryDriver._id)} className="bg-transparent text-red-600 border-red-600 hover:bg-cyan-600 hover:text-white font-semibold  py-2 px-4 border border-blue-500 hover:border-transparent rounded">
+                                            <DeleteIcon />
+                                        </button>
+                                    </StyledTableCell>
+                                </StyledTableRow>
+                            ))
+                        }
+
                     </TableBody>
                 </Table>
             </TableContainer>

@@ -3,8 +3,9 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import databaseConnection from "./config/database.mjs";
 import logger from "./utils/logger.mjs";
-import DeliveryDriverRoute from "./routes/DeliveryDriverRoute.js"
-import DeliveryRoute from "./routes/DeliveryRoute.js"
+import DeliveryDriverRoute from "./routes/DeliveryDriverRoute.mjs"
+import DeliveryRoute from "./routes/DeliveryRoute.mjs";
+
 
 const app = express();
 const PORT = process.env.PORT || "8080";

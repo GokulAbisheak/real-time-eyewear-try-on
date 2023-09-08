@@ -5,6 +5,8 @@ import Header from '../../components/Header';
 import { Outlet } from 'react-router-dom';
 import ViewDeliveryDriver from './ViewDeliveryDriver';
 import AddDeliveryDriver from './AddDeliveryDriver';
+import ViewDeliveryDriverDetails from './ViewDeliveryDriverDetails';
+import UpdateDeliveryDriver from './UpdateDeliveryDriver';
 
 const DeliveryDriverLayout = () => {
     return (
@@ -19,6 +21,8 @@ const DeliveryDriverLayout = () => {
                             <Route>
                                 <Route path='view-delivery-driver' element={<ViewDeliveryDriver />} />
                                 <Route path='add-delivery-driver' element={<AddDeliveryDriver />} />
+                                <Route path='view-delivery-driver-details/:id' element={<ViewDeliveryDriverDetails />} />
+                                <Route path='update-delivery-driver/:id' element={<UpdateDeliveryDriver />} />
                             </Route>
                         </Routes>
                     </div>

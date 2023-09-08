@@ -1,52 +1,56 @@
-const Delivery = require('../models/Delivery');
+import Delivery from "../models/Delivery.mjs";
 
 
-const assignDelivery = async (req, res) => {
+export const assignDelivery = async (req, res) => {
     const { paymentId, driverId, address, phoneNumber } = req.body;
 
-    Delivery.create({ paymentId, driverId, address, phoneNumber, status:'Accepted', lastModifiedDateTime: new Date() })
+    Delivery.create({ paymentId, driverId, address, phoneNumber, status:'Order Confirmed', lastModifiedDateTime: new Date() })
         .then((Delivery) => {
             console.log({ status: 'Success', Delivery });
-            res.json(Delivery);
-            //console.log({status: 'Success'});
+            return res.json(Delivery);
         })
         .catch((err) => {
             console.log({ status: 'Error', err });
+            return res.json({ status: 'Error', err });
         })
 }
 
-const getAllDelivery = async (req, res) => {
+export const getAllDelivery = async (req, res) => {
     Delivery.find()
         .then((Delivery) => {
-            res.json(Delivery);
+            return res.json(Delivery);
         })
         .catch((err) => {
             console.log({ status: 'Error', err });
+            return res.json({ status: 'Error', err });
         })
 }
 
-const getDeliveryByID = async (req, res) => {
-    const { _id } = req.body;
+export const getDeliveryByID = async (req, res) => {
+    let objId = req.params.id;
 
-    Delivery.findById(_id)
+    Delivery.findById(objId)
         .then((Delivery) => {
-            res.json(Delivery);
+            return res.json(Delivery);
         })
         .catch((err) => {
             console.log({ status: 'Error', err });
+            return res.json({ status: 'Error', err });
         });
 }
 
-const updateDeliveryDriverId = async (req, res) => {
-    const { _id, driverId  } = req.body;
+export const updateDeliveryDriverId = async (req, res) => {
+    const { _id, driverId, address, phoneNumber  } = req.body;
 
 
     Delivery.findById(_id)
         .then((Delivery) => {
             if(!Delivery)
-                res.json({ status: 'No Delivery' });
+                res.json({ status: 'No deliveries found' });
             else {
                 Delivery.driverId = driverId;
+                Delivery.address = address;
+                Delivery.phoneNumber = phoneNumber;
                 Delivery.lastModifiedDateTime = new Date();
 
                 Delivery.save()
@@ -60,12 +64,12 @@ const updateDeliveryDriverId = async (req, res) => {
         })
         .catch((err) => {
             console.log({ status: 'Error', err });
+            return res.json({ status: 'Error', err });
         });
 }
 
-const updateDeliveryStatus = async (req, res) => {
+export const updateDeliveryStatus = async (req, res) => {
     const { _id, status  } = req.body;
-
 
     Delivery.findById(_id)
         .then((Delivery) => {
@@ -77,38 +81,32 @@ const updateDeliveryStatus = async (req, res) => {
 
                 Delivery.save()
                 .then((Delivery) => {
-                    res.json(Delivery);
+                    return res.json(Delivery);
                 })
                 .catch((err) => {
                     console.log({ status: 'Error', err });
+                    return res.json({ status: 'Error', err });
                 });
             }
         })
         .catch((err) => {
             console.log({ status: 'Error', err });
+            return res.json({ status: 'Error', err });
         });
 }
 
-const deleteDelivery = async (req, res) => {
+export const deleteDelivery = async (req, res) => {
     let objId = req.params.id;
 
     await Delivery.findByIdAndDelete(objId)
         .then(() => {
-            res.json({ status: 'success' });
+            return res.json({ status: 'success' });
         })
         .catch((err) => {
             console.log({ status: 'Error', err });
+            return res.json({ status: 'Error', err });
         })
 }
 
 
 
-
-module.exports = {
-    assignDelivery,
-    getAllDelivery,
-    getDeliveryByID,
-    updateDeliveryDriverId,
-    updateDeliveryStatus,
-    deleteDelivery
-}

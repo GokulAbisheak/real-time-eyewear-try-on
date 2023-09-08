@@ -28,6 +28,12 @@
             "name": "Delivery Driver Management",
             "icon": "fa-solid fa-users",
             "link": "/delivery-driver/view-delivery-driver"
+        },
+
+        {
+            "name": "Delivery Driver View",
+            "icon": "fa-solid fa-users",
+            "link": "/delivery-driver-view/view-delivery-driver"
         }
     ]
 }

@@ -1,4 +1,4 @@
-const mongoose = require ('mongoose')
+import mongoose from 'mongoose';
 
 const DeliveryDriverSchema = new mongoose.Schema({
 
@@ -55,4 +55,4 @@ const DeliveryDriverSchema = new mongoose.Schema({
 })
 
 
-module.exports = mongoose.model('DeliveryDriver', DeliveryDriverSchema)
+export default mongoose.model('DeliveryDriver', DeliveryDriverSchema);

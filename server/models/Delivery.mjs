@@ -1,4 +1,4 @@
-const mongoose = require ('mongoose')
+import mongoose from 'mongoose';
 
 const DeliverySchema = new mongoose.Schema({
 
@@ -35,4 +35,4 @@ const DeliverySchema = new mongoose.Schema({
 })
 
 
-module.exports = mongoose.model('Delivery', DeliverySchema)
+export default mongoose.model('Delivery', DeliverySchema);

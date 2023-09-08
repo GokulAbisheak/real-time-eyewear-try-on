@@ -10,10 +10,11 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import DeleteIcon from '@mui/icons-material/Delete';
-import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
+import SendTimeExtensionIcon from '@mui/icons-material/SendTimeExtension';
 import axios from 'axios';
 
-const ViewDelivery = () => {
+const ViewDeliveryDriverView = () => {
 
     const [deliveries, setAllDeliveries] = useState([]);
 
@@ -31,11 +32,22 @@ const ViewDelivery = () => {
         getAllDeliveries();
     }, [])
 
-    const deleteDelivery = (objId) => {
-        axios.delete(`http://localhost:8080/delivery/delete-delivery/${objId}`)
+    const updateDelivered = (_id) => {
+        axios.put(`http://localhost:8080/delivery/update-delivery-status`, {_id, status: "Delivered"})
             .then((res) => {
-                if (res.data.status == "success")
-                    window.location.replace("/delivery/view-delivery");
+                if (res.data.status != null)
+                    window.location.replace("/delivery-driver-view/view-delivery-driver");
+            })
+            .catch((err) => {
+                console.error("Error : " + err.message);
+            })
+    }
+
+    const updateDispatched = (_id) => {
+        axios.put(`http://localhost:8080/delivery/update-delivery-status`, {_id, status: "Dispatched"})
+            .then((res) => {
+                if (res.data.status != null)
+                    window.location.replace("/delivery-driver-view/view-delivery-driver");
             })
             .catch((err) => {
                 console.error("Error : " + err.message);
@@ -103,15 +115,13 @@ const ViewDelivery = () => {
                                     <StyledTableCell align="right"> {delivery.phoneNumber} </StyledTableCell>
                                     <StyledTableCell align="right"> {delivery.status} </StyledTableCell>
                                     <StyledTableCell align="right">
-                                        <Link to={{pathname: `/delivery/update-delivery/${delivery._id}`}}>
-                                            <button className="bg-transparent text-cyan-600 border-cyan-600 hover:bg-cyan-600 hover:text-white font-semibold  py-2 px-4 border border-blue-500 hover:border-transparent rounded">
-                                                <ModeEditIcon />
-                                            </button>
-                                        </Link>
+                                        <button onClick={() => updateDispatched(delivery._id)} className="bg-transparent text-cyan-600 border-cyan-600 hover:bg-cyan-600 hover:text-white font-semibold  py-2 px-4 border border-blue-500 hover:border-transparent rounded">
+                                            <SendTimeExtensionIcon />
+                                        </button>
                                     </StyledTableCell>
                                     <StyledTableCell align="right">
-                                        <button onClick={() => deleteDelivery(delivery._id)} className="bg-transparent text-red-600 border-red-600 hover:bg-red-600 hover:text-white font-semibold  py-2 px-4 border border-blue-500 hover:border-transparent rounded">
-                                            <DeleteIcon />
+                                        <button onClick={() => updateDelivered(delivery._id)} className="bg-transparent text-cyan-600 border-cyan-600 hover:bg-cyan-600 hover:text-white font-semibold  py-2 px-4 border border-blue-500 hover:border-transparent rounded">
+                                            <DeliveryDiningIcon />
                                         </button>
                                     </StyledTableCell>
                                 </StyledTableRow>
@@ -124,4 +134,4 @@ const ViewDelivery = () => {
     );
 }
 
-export default ViewDelivery;
+export default ViewDeliveryDriverView;

@@ -1,16 +1,19 @@
-const route = require('express').Router();
-const { assignDelivery,
+import { Router } from 'express';
+
+import { assignDelivery,
     getAllDelivery,
     getDeliveryByID,
     updateDeliveryDriverId,
     updateDeliveryStatus,
-    deleteDelivery } = require('../controllers/DeliveryController');
+    deleteDelivery } from '../controllers/DeliveryController.mjs';
+
+const route = Router();
 
 route.post("/assign-delivery",assignDelivery);
 route.get("/get-all-delivery", getAllDelivery);
-route.get("/get-delivery-by-id", getDeliveryByID); 
+route.get("/get-delivery-by-id/:id", getDeliveryByID); 
 route.put("/update-delivery-driver-id", updateDeliveryDriverId); 
 route.put("/update-delivery-status", updateDeliveryStatus); 
-route.delete("/delete-delivery-driver/:id", deleteDelivery); 
+route.delete("/delete-delivery/:id", deleteDelivery); 
 
-module.exports = route;
+export default route;
