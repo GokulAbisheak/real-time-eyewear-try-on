@@ -12,11 +12,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import axios from 'axios';
-import { deleteDelivery } from '../../../../../server/controllers/DeliveryController.mjs';
 
 const ViewDeliveryDriver = () => {
 
     const [deliveryDrivers, setAllDeliveryDrivers] = useState([]);
+    const [searchKey, setSearchKey] = useState("");
 
     useEffect(() => {
         function getAllDeliveryDrivers() {
@@ -62,19 +62,6 @@ const ViewDeliveryDriver = () => {
         },
     }));
 
-    function createData(name, calories, fat, carbs, protein) {
-        return { name, calories, fat, carbs, protein };
-    }
-
-
-    const rows = [
-        createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-        createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-        createData('Eclair', 262, 16.0, 24, 6.0),
-        createData('Cupcake', 305, 3.7, 67, 4.3),
-        createData('Gingerbread', 356, 16.0, 49, 3.9),
-    ];
-
 
     return (
         <>
@@ -85,6 +72,13 @@ const ViewDeliveryDriver = () => {
                     </button>
                 </Link>
             </div>
+            <input
+                type="search"
+                id="default-search"
+                onChange={(e) => setSearchKey(e.target.value)}
+                className="block w-full mt-3 p-4 pl-10 text-sm text-black border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500  dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Search"
+            />
 
             <TableContainer component={Paper} style={{ marginTop: '20px' }}>
                 <Table>
@@ -102,7 +96,15 @@ const ViewDeliveryDriver = () => {
                     </TableHead>
                     <TableBody>
                         {
-                            deliveryDrivers.map((deliveryDriver) => (
+                            deliveryDrivers.filter((key) => {
+                                const firstName = (key.firstName || "").toLowerCase();
+                                const lastName = (key.firstName || "").toLowerCase();
+                                const email = (key.email || "").toLowerCase();
+                                const licenseNo = (key.licenseNo || "").toLowerCase();
+                                return(
+                                    firstName.includes(searchKey.toLowerCase()) || lastName.includes(searchKey.toLowerCase()) || email.includes(searchKey.toLowerCase()) || licenseNo.includes(searchKey.toLowerCase())
+                                );
+                            }).map((deliveryDriver) => (
                                 <StyledTableRow>
                                     <StyledTableCell component="th" scope="row"> {deliveryDriver._id} </StyledTableCell>
                                     <StyledTableCell align="right">{deliveryDriver.firstName}</StyledTableCell>
@@ -117,7 +119,7 @@ const ViewDeliveryDriver = () => {
                                         </Link>
                                     </StyledTableCell>
                                     <StyledTableCell align="right">
-                                        <Link to={{pathname: `/delivery-driver/update-delivery-driver/${deliveryDriver._id}`}}>
+                                        <Link to={{ pathname: `/delivery-driver/update-delivery-driver/${deliveryDriver._id}` }}>
                                             <button className="bg-transparent text-cyan-600 border-cyan-600 hover:bg-cyan-600 hover:text-white font-semibold  py-2 px-4 border border-blue-500 hover:border-transparent rounded">
                                                 <ModeEditIcon />
                                             </button>

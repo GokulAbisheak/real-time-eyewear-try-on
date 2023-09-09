@@ -2,13 +2,23 @@ import mongoose from "mongoose"
 
 const PaymentSchema = new mongoose.Schema({
 
-    products: [{
-        name: String,
-        price: Number,
-        quantity: Number
-    }],
+    products: {
+        type: mongoose.ObjectId,
+        ref: "", 
+        required: true
+    },
+
+    userName: {
+        type: String,
+        required: true
+    },
 
     paymentType: {
+        type: String,
+        required: true
+    },
+
+    cardNumber: {
         type: String,
         required: true
     },

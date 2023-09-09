@@ -1,9 +1,12 @@
 import DeliveryDriver from "../models/DeliveryDriver.mjs";
+import bcrypt from 'bcrypt';
 
 export const registerDeliveryDriver = async (req, res) => {
     const { firstName, lastName, email, address, NIC, licenseNo, vehicleNo, password } = req.body;
+    
+    const hashedPassword = await bcrypt.hash(password, 12);
 
-    DeliveryDriver.create({ firstName, lastName, email, address, NIC, licenseNo, vehicleNo, password, numberOfOrder: 0, lastModifiedDateTime: new Date() })
+    DeliveryDriver.create({ firstName, lastName, email, address, NIC, licenseNo, vehicleNo, password: hashedPassword, numberOfOrder: 0, lastModifiedDateTime: new Date() })
         .then((DeliveryDriver) => {
             console.log({ status: 'Success', DeliveryDriver });
             return res.json(DeliveryDriver);
@@ -106,20 +109,20 @@ export const deleteDeliveryDriver = async (req, res) => {
 }
 
 export const getMinNumberOfOrder = async (req, res) => {
-        await DeliveryDriver.find({}, 'numberOfOrder').then((drivers) => {
-            if (!drivers || drivers.length === 0) {
-                return res.json({ status: 'No drivers found' });
+    await DeliveryDriver.find({}, 'numberOfOrder').then((drivers) => {
+        if (!drivers || drivers.length === 0) {
+            return res.json({ status: 'No drivers found' });
+        }
+
+        let minOrderDriver = drivers[0];
+
+        for (let i = 1; i < drivers.length; i++) {
+            if (drivers[i].numberOfOrder < minOrderDriver.numberOfOrder) {
+                minOrderDriver = drivers[i];
             }
-    
-            let minOrderDriver = drivers[0];
-    
-            for (let i = 1; i < drivers.length; i++) {
-                if (drivers[i].numberOfOrder < minOrderDriver.numberOfOrder) {
-                    minOrderDriver = drivers[i];
-                }
-            }
-    
-            DeliveryDriver.findById(minOrderDriver._id)
+        }
+
+        DeliveryDriver.findById(minOrderDriver._id)
             .then((DeliveryDriver) => {
                 if (!DeliveryDriver)
                     return res.json({ status: 'No drivers found' });
@@ -127,10 +130,10 @@ export const getMinNumberOfOrder = async (req, res) => {
                     var order = parseInt(DeliveryDriver.numberOfOrder, 10);
                     order = order + 1;
                     DeliveryDriver.numberOfOrder = order.toString();
-    
+
                     DeliveryDriver.save()
                         .then((DeliveryDriver) => {
-                            
+
                         })
                         .catch((err) => {
                             console.log({ status: 'Error', err });
@@ -142,9 +145,9 @@ export const getMinNumberOfOrder = async (req, res) => {
                 console.log({ status: 'Error', err });
                 return res.json({ status: 'Error', err });
             });
-    
-            return res.json( minOrderDriver );
-        })
+
+        return res.json(minOrderDriver);
+    })
         .catch((err) => {
             console.log({ status: 'Error', err });
             return res.json({ status: 'Error', err });
@@ -154,12 +157,12 @@ export const getMinNumberOfOrder = async (req, res) => {
 
 
 export const getAllDeliveryDriverFirstName = async (req, res) => {
-        await DeliveryDriver.find({}, 'firstName').then((drivers) => {
-            if (!drivers || drivers.length === 0) {
-                return res.json({ status: 'No drivers found' });
-            }
-            return res.json(drivers);
-        })
+    await DeliveryDriver.find({}, 'firstName').then((drivers) => {
+        if (!drivers || drivers.length === 0) {
+            return res.json({ status: 'No drivers found' });
+        }
+        return res.json(drivers);
+    })
         .catch((err) => {
             console.log({ status: 'Error', err });
             return res.json({ status: 'Error', err });

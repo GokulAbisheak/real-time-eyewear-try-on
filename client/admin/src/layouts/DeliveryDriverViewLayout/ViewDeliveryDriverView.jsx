@@ -17,6 +17,7 @@ import axios from 'axios';
 const ViewDeliveryDriverView = () => {
 
     const [deliveries, setAllDeliveries] = useState([]);
+    const [searchKey, setSearchKey] = useState("");
 
     useEffect(() => {
         function getAllDeliveries() {
@@ -33,7 +34,7 @@ const ViewDeliveryDriverView = () => {
     }, [])
 
     const updateDelivered = (_id) => {
-        axios.put(`http://localhost:8080/delivery/update-delivery-status`, {_id, status: "Delivered"})
+        axios.put(`http://localhost:8080/delivery/update-delivery-status`, { _id, status: "Delivered" })
             .then((res) => {
                 if (res.data.status != null)
                     window.location.replace("/delivery-driver-view/view-delivery-driver");
@@ -44,7 +45,7 @@ const ViewDeliveryDriverView = () => {
     }
 
     const updateDispatched = (_id) => {
-        axios.put(`http://localhost:8080/delivery/update-delivery-status`, {_id, status: "Dispatched"})
+        axios.put(`http://localhost:8080/delivery/update-delivery-status`, { _id, status: "Dispatched" })
             .then((res) => {
                 if (res.data.status != null)
                     window.location.replace("/delivery-driver-view/view-delivery-driver");
@@ -90,12 +91,19 @@ const ViewDeliveryDriverView = () => {
 
     return (
         <>
+            <input
+                type="search"
+                id="default-search"
+                onChange={(e) => setSearchKey(e.target.value)}
+                className="block w-full mt-3 p-4 pl-10 text-sm text-black border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500  dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Search"
+            />
             <TableContainer component={Paper} style={{ marginTop: '20px' }}>
                 <Table>
                     <TableHead>
                         <TableRow>
                             <StyledTableCell>Delivery ID</StyledTableCell>
-                            <StyledTableCell align="right">Order ID</StyledTableCell>
+                            <StyledTableCell align="right">Payment Id</StyledTableCell>
                             <StyledTableCell align="right">Driver</StyledTableCell>
                             <StyledTableCell align="right">Address</StyledTableCell>
                             <StyledTableCell align="right">Phone Number</StyledTableCell>
@@ -106,7 +114,15 @@ const ViewDeliveryDriverView = () => {
                     </TableHead>
                     <TableBody>
                         {
-                            deliveries.map((delivery) => (
+                            deliveries.filter((key) => {
+                                const deliveryId = (key._id || "").toLowerCase();
+                                const paymentId = (key.paymentId || "").toLowerCase();
+                                const driverId = (key.driverId || "").toLowerCase();
+                                const phoneNumber = (key.phoneNumber || "").toLowerCase();
+                                return (
+                                    deliveryId.includes(searchKey.toLowerCase()) || paymentId.includes(searchKey.toLowerCase()) || driverId.includes(searchKey.toLowerCase()) || phoneNumber.includes(searchKey.toLowerCase())
+                                );
+                            }).map((delivery) => (
                                 <StyledTableRow>
                                     <StyledTableCell component="th" scope="row"> {delivery._id} </StyledTableCell>
                                     <StyledTableCell align="right"> {delivery.paymentId} </StyledTableCell>
