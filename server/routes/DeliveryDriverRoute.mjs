@@ -8,6 +8,7 @@ import {
   deleteDeliveryDriver,
   getMinNumberOfOrder,
   getAllDeliveryDriverFirstName,
+  DeliveryDriverDelivered,
 } from "../controllers/DeliveryDriverController.mjs";
 
 const route = Router();
@@ -20,5 +21,6 @@ route.put("/update-delivery-driver", updateDeliveryDriver);
 route.delete("/delete-delivery-driver/:id", deleteDeliveryDriver);
 route.get("/get-min-order-driver", getMinNumberOfOrder);
 route.get("/get-all-delivery-drivers-name", getAllDeliveryDriverFirstName);
+route.get("/driver-deliver/:id", DeliveryDriverDelivered);
 
 export default route;

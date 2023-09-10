@@ -40,8 +40,34 @@ const ViewDeliveryDriverView = () => {
         status: "Delivered",
       })
       .then((res) => {
-        if (res.data.status != null)
-          window.location.replace("/delivery-driver-view/view-delivery-driver");
+        if (res.data.status != null) {
+          axios
+            .get(`http://localhost:8080/delivery/get-delivery-by-id/${_id}`)
+            .then((res) => {
+              var _id = res.data.driverId;
+              if (res.data != null) {
+                alert(_id);
+                axios
+                  .get(
+                    `http://localhost:8080/delivery-driver/driver-deliver/${_id}`
+                  )
+                  .then((res) => {
+                    if (res.data != null) {
+                      window.location.replace(
+                        "/delivery-driver-view/view-delivery-driver"
+                      );
+                    }
+                  })
+                  .catch((err) => {
+                    console.error("Error : " + err.message);
+                  });
+              }
+            })
+            .catch((err) => {
+              console.error("Error : " + err.message);
+            });
+        }
+        //window.location.replace("/delivery-driver-view/view-delivery-driver");
       })
       .catch((err) => {
         console.error("Error : " + err.message);

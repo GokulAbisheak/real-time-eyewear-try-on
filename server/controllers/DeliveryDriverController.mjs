@@ -191,3 +191,27 @@ export const getAllDeliveryDriverFirstName = async (req, res) => {
       return res.json({ status: "Error", err });
     });
 };
+
+export const DeliveryDriverDelivered = async (req, res) => {
+  let objId = req.params.id;
+
+  DeliveryDriver.findById(objId)
+    .then((DeliveryDriver) => {
+      var order = parseInt(DeliveryDriver.numberOfOrder, 10);
+      order = order - 1;
+      DeliveryDriver.numberOfOrder = order.toString();
+
+      DeliveryDriver.save()
+        .then((DeliveryDriver) => {
+          return res.json(DeliveryDriver);
+        })
+        .catch((err) => {
+          console.log({ status: "Error", err });
+          return res.json({ status: "Error", err });
+        });
+    })
+    .catch((err) => {
+      console.log({ status: "Error", err });
+      return res.json({ status: "Error", err });
+    });
+};
