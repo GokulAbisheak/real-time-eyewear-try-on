@@ -15,6 +15,7 @@ const UpdateDelivery = () => {
   const [phoneNumber, setPhoneNumber] = useState();
   const [address, setAddress] = useState();
   const [status, setStatus] = useState();
+  const [errors, setErrors] = useState("");
 
   useEffect(() => {
     function getDeliveryDriver() {
